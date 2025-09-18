@@ -140,24 +140,8 @@ with col1:
     
     # Display news results if available
     if 'news_text' in st.session_state:
-        st.subheader(f"📊 Results for: {st.session_state.current_query}")
-        
-        # Display the raw news text with proper markdown formatting
-        with st.container():
-            st.markdown("""
-            <div style="
-                background-color: #f0f2f6;
-                padding: 20px;
-                border-radius: 10px;
-                border-left: 5px solid #1f77b4;
-                margin: 10px 0;
-            ">
-            """, unsafe_allow_html=True)
-            
-            # Display the news content as markdown (preserves links and formatting)
-            st.markdown(st.session_state.news_text)
-            
-            st.markdown("</div>", unsafe_allow_html=True)
+        # Just display the raw news text directly
+        st.markdown(st.session_state.news_text)
 
 with col2:
     st.header("📈 Sentiment Analysis")

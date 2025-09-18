@@ -34,25 +34,47 @@ def search_news_with_ai(query):
         # Get the response text
         news_text = response.output[1].content[0].text
         
-        # Parse the markdown-formatted response to extract headlines and links
+        # Parse the response - handle different formats
         news_points = []
         lines = news_text.split('\n')
         
         for line in lines:
             line = line.strip()
-            if line.startswith('-') and '**' in line and '(' in line and ')' in line:
-                # Extract headline (remove markdown formatting)
-                headline_part = line.split('([')[0].strip('- ')
-                headline = headline_part.replace('**', '').strip()
+            if not line or line.startswith('#'):
+                continue
                 
-                # Extract URL
-                if '([' in line and '])' in line:
-                    url_part = line.split('([')[1].split('])')[0]
-                    if 'http' in url_part:
-                        url = url_part.split('](')[1] if '](http' in url_part else url_part
+            # Handle bullet points with links
+            if line.startswith('-') or line.startswith('•') or line.startswith('*'):
+                # Remove bullet point
+                content = line.lstrip('-•* ').strip()
+                
+                # Try to extract headline and URL
+                if '([' in content and '])' in content:
+                    # Format: headline ([website](url))
+                    headline_part = content.split('([')[0].strip()
+                    url_part = content.split('([')[1].split('])')[0]
+                    
+                    # Clean headline (remove markdown formatting)
+                    headline = headline_part.replace('**', '').strip()
+                    
+                    # Extract URL
+                    if '](http' in url_part:
+                        url = url_part.split('](')[1]
+                    elif url_part.startswith('http'):
+                        url = url_part
                     else:
                         url = f"https://{url_part}"
+                        
+                elif '(http' in content and ')' in content:
+                    # Format: headline (url)
+                    headline = content.split('(http')[0].strip().replace('**', '')
+                    url_start = content.find('(http') + 1
+                    url_end = content.find(')', url_start)
+                    url = content[url_start:url_end] if url_end > url_start else ""
+                    
                 else:
+                    # No URL found, just use the content as headline
+                    headline = content.replace('**', '').strip()
                     url = ""
                 
                 if headline:  # Only add if we have a headline
@@ -61,11 +83,19 @@ def search_news_with_ai(query):
                         'url': url
                     })
         
-        return news_points if news_points else [{"headline": "No news found", "url": ""}]
+        # If no points found, return the raw text as a single point
+        if not news_points:
+            news_points = [{
+                'headline': news_text.strip().replace('**', '')[:200] + '...' if len(news_text) > 200 else news_text.strip().replace('**', ''),
+                'url': ""
+            }]
+            
+        return news_points
         
     except Exception as e:
         st.error(f"Error searching news: {str(e)}")
-        return [{"headline": "Error searching news. Please try again.", "url": ""}]
+        # Return error as a properly formatted point
+        return [{"headline": f"Error searching news: {str(e)}", "url": ""}]
 
 def get_sentiment_score_with_ai(news_points):
     """Use OpenAI to analyze sentiment and return score 1-5"""
@@ -154,7 +184,7 @@ with col1:
         with st.spinner("Searching news and analyzing sentiment..."):
             time.sleep(1)  # Small delay for UX
             
-            # Generate search query
+            # Generate search query using user selections
             search_query = f"Berita kasus {x1} {x2} di Indonesia, hanya listnya saja jangan pakai kata kata lain!"
             
             # Get news results using OpenAI
@@ -185,9 +215,14 @@ with col1:
             """, unsafe_allow_html=True)
             
             for i, point in enumerate(st.session_state.news_points, 1):
-                st.markdown(f"**{i}.** {point['headline']}")
-                if point['url']:
-                    st.markdown(f"   🔗 [Read more]({point['url']})")
+                # Ensure point is a dictionary with the expected keys
+                if isinstance(point, dict) and 'headline' in point:
+                    st.markdown(f"**{i}.** {point['headline']}")
+                    if point.get('url'):
+                        st.markdown(f"   🔗 [Read more]({point['url']})")
+                else:
+                    # Fallback for unexpected format
+                    st.markdown(f"**{i}.** {str(point)}")
                 st.markdown("")  # Add spacing
             
             st.markdown("</div>", unsafe_allow_html=True)

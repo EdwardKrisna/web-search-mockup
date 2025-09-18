@@ -114,25 +114,18 @@ company_names = [
     'PT Vale Indonesia TBK'
 ]
 
-# Sidebar for selections
-with st.sidebar:
-    st.header("🔧 Configuration")
-    
-    x1 = st.selectbox(
-        "Select Case Type:",
-        case_types,
-        index=0
-    )
-    
-    x2 = st.selectbox(
-        "Select Company:",
-        company_names,
-        index=0
-    )
-    
-    search_button = st.button("🔍 Search News", type="primary", use_container_width=True)
+# Main selections
+col1, col2 = st.columns(2)
 
-# Main content area
+with col1:
+    x1 = st.selectbox("Select Case Type:", case_types, index=0)
+
+with col2:
+    x2 = st.selectbox("Select Company:", company_names, index=0)
+
+search_button = st.button("🔍 Search News", type="primary", use_container_width=True)
+
+# Results area
 col1, col2 = st.columns([2, 1])
 
 with col1:
@@ -237,25 +230,3 @@ with col2:
     
     else:
         st.info("👆 Please search for news first to analyze sentiment")
-
-# Footer
-st.markdown("---")
-st.markdown("""
-<div style="text-align: center; color: #666; font-size: 12px;">
-    <p>News Sentiment Analyzer | Powered by AI</p>
-</div>
-""", unsafe_allow_html=True)
-
-# Instructions
-with st.expander("ℹ️ How to use this app"):
-    st.markdown("""
-    1. **Select Case Type**: Choose the type of case you want to search for
-    2. **Select Company**: Choose the company you want to analyze
-    3. **Search News**: Click the search button to find relevant news
-    4. **Analyze Sentiment**: Click analyze to get sentiment score (1-5)
-    
-    **Score Meanings:**
-    - 🔴 1-2: Negative sentiment (bad news)
-    - 🟡 3: Neutral sentiment 
-    - 🟢 4-5: Positive sentiment (good news)
-    """)

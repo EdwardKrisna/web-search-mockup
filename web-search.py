@@ -43,7 +43,7 @@ def get_sentiment_score_with_ai(news_text):
     """Use OpenAI to analyze sentiment and return score 1-5"""
     try:
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-4.1-mini",
             messages=[
                 {
                     "role": "system", 
@@ -71,13 +71,12 @@ def get_sentiment_score_with_ai(news_text):
 
 # Streamlit App Configuration
 st.set_page_config(
-    page_title="News Sentiment Analyzer",
+    page_title="Web Search Mockup",
     page_icon="📰",
     layout="wide"
 )
 
-st.title("📰 News Sentiment Analyzer")
-st.markdown("Analyze news sentiment for companies and case types in Indonesia")
+st.title("📰 Web Search Mockup")
 
 # Dropdown options
 case_types = [
@@ -187,11 +186,6 @@ with col2:
             <h1 style="color: {color}; margin: 5px 0;">{score}/5</h1>
         </div>
         """, unsafe_allow_html=True)
-        
-        # Progress bar
-        st.progress(score / 5)
-        
-        st.success(f"Analysis complete! Score: {score}/5")
     
     else:
         st.info("👆 Click search to get news and sentiment analysis")

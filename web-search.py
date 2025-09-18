@@ -19,51 +19,69 @@ client = init_openai_client()
 
 # OpenAI API functions
 def search_news_with_ai(query):
-    """Use OpenAI to search/generate news points about the query"""
+    """Use OpenAI web search to find real news with actual links"""
     try:
-        response = client.chat.completions.create(
-            model="gpt-4",
-            messages=[
+        response = client.responses.create(
+            model="gpt-4.1-mini", 
+            input=query,
+            tools=[
                 {
-                    "role": "system", 
-                    "content": "You are a news researcher. Generate a list of realistic news headlines/points about the given query. Return only bullet points, no other text."
-                },
-                {
-                    "role": "user", 
-                    "content": query
+                    "type": "web_search"
                 }
-            ],
-            max_tokens=500,
-            temperature=0.7
+            ]
         )
         
-        # Parse response into list
-        news_text = response.choices[0].message.content
-        news_points = [line.strip().lstrip('•-*').strip() 
-                      for line in news_text.split('\n') 
-                      if line.strip() and not line.strip().startswith('#')]
+        # Get the response text
+        news_text = response.output[1].content[0].text
         
-        return [point for point in news_points if point]  # Remove empty strings
+        # Parse the markdown-formatted response to extract headlines and links
+        news_points = []
+        lines = news_text.split('\n')
+        
+        for line in lines:
+            line = line.strip()
+            if line.startswith('-') and '**' in line and '(' in line and ')' in line:
+                # Extract headline (remove markdown formatting)
+                headline_part = line.split('([')[0].strip('- ')
+                headline = headline_part.replace('**', '').strip()
+                
+                # Extract URL
+                if '([' in line and '])' in line:
+                    url_part = line.split('([')[1].split('])')[0]
+                    if 'http' in url_part:
+                        url = url_part.split('](')[1] if '](http' in url_part else url_part
+                    else:
+                        url = f"https://{url_part}"
+                else:
+                    url = ""
+                
+                if headline:  # Only add if we have a headline
+                    news_points.append({
+                        'headline': headline,
+                        'url': url
+                    })
+        
+        return news_points if news_points else [{"headline": "No news found", "url": ""}]
         
     except Exception as e:
-        st.error(f"Error generating news: {str(e)}")
-        return ["Error generating news. Please try again."]
+        st.error(f"Error searching news: {str(e)}")
+        return [{"headline": "Error searching news. Please try again.", "url": ""}]
 
 def get_sentiment_score_with_ai(news_points):
     """Use OpenAI to analyze sentiment and return score 1-5"""
     try:
-        news_text = "\n".join(news_points)
+        headlines_text = "\n".join([point['headline'] for point in news_points])
         
         response = client.chat.completions.create(
             model="gpt-4",
             messages=[
                 {
                     "role": "system", 
-                    "content": "You are a sentiment analyst. Analyze the given news points and rate the overall sentiment on a scale of 1-5 where: 1=Very Negative, 2=Negative, 3=Neutral, 4=Positive, 5=Very Positive. Return ONLY the number (1, 2, 3, 4, or 5)."
+                    "content": "You are a sentiment analyst. Analyze the given news headlines and rate the overall sentiment on a scale of 1-5 where: 1=Very Negative, 2=Negative, 3=Neutral, 4=Positive, 5=Very Positive. Return ONLY the number (1, 2, 3, 4, or 5)."
                 },
                 {
                     "role": "user", 
-                    "content": f"Rate the sentiment of these news points:\n\n{news_text}"
+                    "content": f"Rate the sentiment of these news headlines:\n\n{headlines_text}"
                 }
             ],
             max_tokens=10,
@@ -133,8 +151,8 @@ with col1:
     
     if search_button:
         # Show loading spinner
-        with st.spinner("Searching for news..."):
-            time.sleep(2)  # Simulate API call delay
+        with st.spinner("Searching news and analyzing sentiment..."):
+            time.sleep(1)  # Small delay for UX
             
             # Generate search query
             search_query = f"Berita kasus {x1} {x2} di Indonesia, hanya listnya saja jangan pakai kata kata lain!"
@@ -142,8 +160,12 @@ with col1:
             # Get news results using OpenAI
             news_points = search_news_with_ai(search_query)
             
+            # Get sentiment score using OpenAI (in same run)
+            sentiment_score = get_sentiment_score_with_ai(news_points)
+            
             # Store in session state
             st.session_state.news_points = news_points
+            st.session_state.sentiment_score = sentiment_score
             st.session_state.current_query = f"{x1} - {x2}"
     
     # Display news results if available
@@ -163,70 +185,70 @@ with col1:
             """, unsafe_allow_html=True)
             
             for i, point in enumerate(st.session_state.news_points, 1):
-                st.markdown(f"**{i}.** {point}")
+                st.markdown(f"**{i}.** {point['headline']}")
+                if point['url']:
+                    st.markdown(f"   🔗 [Read more]({point['url']})")
+                st.markdown("")  # Add spacing
             
             st.markdown("</div>", unsafe_allow_html=True)
 
 with col2:
     st.header("📈 Sentiment Analysis")
     
-    if 'news_points' in st.session_state:
-        analyze_button = st.button("🧠 Analyze Sentiment", type="secondary", use_container_width=True)
+    # Display sentiment score if available (automatically after search)
+    if 'sentiment_score' in st.session_state:
+        score = st.session_state.sentiment_score
         
-        if analyze_button:
-            with st.spinner("Analyzing sentiment..."):
-                time.sleep(1.5)  # Simulate API call delay
-                
-                # Get sentiment score using OpenAI
-                score = get_sentiment_score_with_ai(st.session_state.news_points)
-                st.session_state.sentiment_score = score
+        # Define color and label based on score
+        if score == 1:
+            color = "#ff4444"
+            label = "Very Negative"
+            emoji = "😡"
+        elif score == 2:
+            color = "#ff8800"
+            label = "Negative" 
+            emoji = "😟"
+        elif score == 3:
+            color = "#ffdd00"
+            label = "Neutral"
+            emoji = "😐"
+        elif score == 4:
+            color = "#88ff00"
+            label = "Positive"
+            emoji = "😊"
+        else:  # score == 5
+            color = "#00ff44"
+            label = "Very Positive"
+            emoji = "😍"
         
-        # Display sentiment score if available
-        if 'sentiment_score' in st.session_state:
-            score = st.session_state.sentiment_score
-            
-            # Define color and label based on score
-            if score == 1:
-                color = "#ff4444"
-                label = "Very Negative"
-                emoji = "😡"
-            elif score == 2:
-                color = "#ff8800"
-                label = "Negative" 
-                emoji = "😟"
-            elif score == 3:
-                color = "#ffdd00"
-                label = "Neutral"
-                emoji = "😐"
-            elif score == 4:
-                color = "#88ff00"
-                label = "Positive"
-                emoji = "😊"
-            else:  # score == 5
-                color = "#00ff44"
-                label = "Very Positive"
-                emoji = "😍"
-            
-            # Display score in a nice card
-            st.markdown(f"""
-            <div style="
-                background-color: {color}20;
-                padding: 20px;
-                border-radius: 15px;
-                border: 3px solid {color};
-                text-align: center;
-                margin: 20px 0;
-            ">
-                <h2 style="color: {color}; margin: 0;">{emoji}</h2>
-                <h3 style="color: {color}; margin: 5px 0;">{label}</h3>
-                <h1 style="color: {color}; margin: 5px 0;">{score}/5</h1>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            # Progress bar
-            st.progress(score / 5)
-            
-            st.success(f"Sentiment analysis complete! Score: {score}/5")
+        # Display score in a nice card
+        st.markdown(f"""
+        <div style="
+            background-color: {color}20;
+            padding: 20px;
+            border-radius: 15px;
+            border: 3px solid {color};
+            text-align: center;
+            margin: 20px 0;
+        ">
+            <h2 style="color: {color}; margin: 0;">{emoji}</h2>
+            <h3 style="color: {color}; margin: 5px 0;">{label}</h3>
+            <h1 style="color: {color}; margin: 5px 0;">{score}/5</h1>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Progress bar
+        st.progress(score / 5)
+        
+        st.success(f"Analysis complete! Score: {score}/5")
     
     else:
-        st.info("👆 Please search for news first to analyze sentiment")
+        st.info("👆 Click search to get news and sentiment analysis")
+
+# Footer
+st.markdown("---")
+st.markdown("""
+<div style="text-align: center; color: #666; font-size: 12px;">
+    <p>News Sentiment Analyzer | Powered by AI</p>
+</div>
+""", unsafe_allow_html=True)

@@ -98,7 +98,8 @@ company_names = [
     'PT Gudang Garam TBK',
     'PT Bank Negara Indonesia TBK',
     'PT Adaro Energy TBK',
-    'PT Vale Indonesia TBK'
+    'PT Vale Indonesia TBK',
+    'PT Perkebunan Nusantara'
 ]
 
 # Main selections

@@ -31,87 +31,27 @@ def search_news_with_ai(query):
             ]
         )
         
-        # Get the response text
+        # Get the raw response text - keep it simple
         news_text = response.output[1].content[0].text
-        
-        # Parse the response - handle different formats
-        news_points = []
-        lines = news_text.split('\n')
-        
-        for line in lines:
-            line = line.strip()
-            if not line or line.startswith('#'):
-                continue
-                
-            # Handle bullet points with links
-            if line.startswith('-') or line.startswith('•') or line.startswith('*'):
-                # Remove bullet point
-                content = line.lstrip('-•* ').strip()
-                
-                # Try to extract headline and URL
-                if '([' in content and '])' in content:
-                    # Format: headline ([website](url))
-                    headline_part = content.split('([')[0].strip()
-                    url_part = content.split('([')[1].split('])')[0]
-                    
-                    # Clean headline (remove markdown formatting)
-                    headline = headline_part.replace('**', '').strip()
-                    
-                    # Extract URL
-                    if '](http' in url_part:
-                        url = url_part.split('](')[1]
-                    elif url_part.startswith('http'):
-                        url = url_part
-                    else:
-                        url = f"https://{url_part}"
-                        
-                elif '(http' in content and ')' in content:
-                    # Format: headline (url)
-                    headline = content.split('(http')[0].strip().replace('**', '')
-                    url_start = content.find('(http') + 1
-                    url_end = content.find(')', url_start)
-                    url = content[url_start:url_end] if url_end > url_start else ""
-                    
-                else:
-                    # No URL found, just use the content as headline
-                    headline = content.replace('**', '').strip()
-                    url = ""
-                
-                if headline:  # Only add if we have a headline
-                    news_points.append({
-                        'headline': headline,
-                        'url': url
-                    })
-        
-        # If no points found, return the raw text as a single point
-        if not news_points:
-            news_points = [{
-                'headline': news_text.strip().replace('**', '')[:200] + '...' if len(news_text) > 200 else news_text.strip().replace('**', ''),
-                'url': ""
-            }]
-            
-        return news_points
+        return news_text
         
     except Exception as e:
         st.error(f"Error searching news: {str(e)}")
-        # Return error as a properly formatted point
-        return [{"headline": f"Error searching news: {str(e)}", "url": ""}]
+        return f"Error searching news: {str(e)}"
 
-def get_sentiment_score_with_ai(news_points):
+def get_sentiment_score_with_ai(news_text):
     """Use OpenAI to analyze sentiment and return score 1-5"""
     try:
-        headlines_text = "\n".join([point['headline'] for point in news_points])
-        
         response = client.chat.completions.create(
             model="gpt-4",
             messages=[
                 {
                     "role": "system", 
-                    "content": "You are a sentiment analyst. Analyze the given news headlines and rate the overall sentiment on a scale of 1-5 where: 1=Very Negative, 2=Negative, 3=Neutral, 4=Positive, 5=Very Positive. Return ONLY the number (1, 2, 3, 4, or 5)."
+                    "content": "You are a sentiment analyst. Analyze the given news content and rate the overall sentiment on a scale of 1-5 where: 1=Very Negative, 2=Negative, 3=Neutral, 4=Positive, 5=Very Positive. Return ONLY the number (1, 2, 3, 4, or 5)."
                 },
                 {
                     "role": "user", 
-                    "content": f"Rate the sentiment of these news headlines:\n\n{headlines_text}"
+                    "content": f"Rate the sentiment of this news content:\n\n{news_text}"
                 }
             ],
             max_tokens=10,
@@ -184,25 +124,25 @@ with col1:
         with st.spinner("Searching news and analyzing sentiment..."):
             time.sleep(1)  # Small delay for UX
             
-            # Generate search query using user selections
-            search_query = f"Berita kasus {x1} {x2} di Indonesia, hanya listnya saja jangan pakai kata kata lain!"
+            # Generate search query using x1 and x2 from user selections
+            search_query = f"Berita {x1} {x2} di Indonesia, hanya listnya saja jangan pakai kata kata lain!"
             
-            # Get news results using OpenAI
-            news_points = search_news_with_ai(search_query)
+            # Get news results using OpenAI web search
+            news_text = search_news_with_ai(search_query)
             
             # Get sentiment score using OpenAI (in same run)
-            sentiment_score = get_sentiment_score_with_ai(news_points)
+            sentiment_score = get_sentiment_score_with_ai(news_text)
             
             # Store in session state
-            st.session_state.news_points = news_points
+            st.session_state.news_text = news_text
             st.session_state.sentiment_score = sentiment_score
             st.session_state.current_query = f"{x1} - {x2}"
     
     # Display news results if available
-    if 'news_points' in st.session_state:
+    if 'news_text' in st.session_state:
         st.subheader(f"📊 Results for: {st.session_state.current_query}")
         
-        # Display news points in a nice box
+        # Display the raw news text with proper markdown formatting
         with st.container():
             st.markdown("""
             <div style="
@@ -214,16 +154,8 @@ with col1:
             ">
             """, unsafe_allow_html=True)
             
-            for i, point in enumerate(st.session_state.news_points, 1):
-                # Ensure point is a dictionary with the expected keys
-                if isinstance(point, dict) and 'headline' in point:
-                    st.markdown(f"**{i}.** {point['headline']}")
-                    if point.get('url'):
-                        st.markdown(f"   🔗 [Read more]({point['url']})")
-                else:
-                    # Fallback for unexpected format
-                    st.markdown(f"**{i}.** {str(point)}")
-                st.markdown("")  # Add spacing
+            # Display the news content as markdown (preserves links and formatting)
+            st.markdown(st.session_state.news_text)
             
             st.markdown("</div>", unsafe_allow_html=True)
 

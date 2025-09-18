@@ -152,24 +152,19 @@ with col2:
         # Define color and label based on score
         if score == 1:
             color = "#ff4444"
-            label = "Very Negative"
-            emoji = "😡"
+            label = "Sangat Negatif"
         elif score == 2:
             color = "#ff8800"
-            label = "Negative" 
-            emoji = "😟"
+            label = "Negatif" 
         elif score == 3:
             color = "#ffdd00"
-            label = "Neutral"
-            emoji = "😐"
+            label = "Netral"
         elif score == 4:
             color = "#88ff00"
-            label = "Positive"
-            emoji = "😊"
+            label = "Positif"
         else:  # score == 5
             color = "#00ff44"
-            label = "Very Positive"
-            emoji = "😍"
+            label = "Sangat Positif"
         
         # Display score in a nice card
         st.markdown(f"""
@@ -181,7 +176,6 @@ with col2:
             text-align: center;
             margin: 20px 0;
         ">
-            <h2 style="color: {color}; margin: 0;">{emoji}</h2>
             <h3 style="color: {color}; margin: 5px 0;">{label}</h3>
             <h1 style="color: {color}; margin: 5px 0;">{score}/5</h1>
         </div>
@@ -189,11 +183,3 @@ with col2:
     
     else:
         st.info("👆 Click search to get news and sentiment analysis")
-
-# Footer
-st.markdown("---")
-st.markdown("""
-<div style="text-align: center; color: #666; font-size: 12px;">
-    <p>News Sentiment Analyzer | Powered by AI</p>
-</div>
-""", unsafe_allow_html=True)

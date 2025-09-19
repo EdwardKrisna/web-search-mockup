@@ -85,7 +85,8 @@ case_types = [
     'Penipuan', 
     'Pelanggaran Regulasi',
     'Audit Bermasalah',
-    'Konflik Kepentingan'
+    'Konflik Kepentingan',
+    'Kerugian Negara'
 ]
 
 company_names = [

@@ -42,14 +42,14 @@ def search_news_with_ai(query):
 def get_sentiment_score_with_ai(news_text):
     """Use OpenAI to analyze sentiment and return score 1-5"""
     try:
-        response = client.response.create(
+        response = client.responses.create(
             model="gpt-4.1-mini",
             instructions="You are a sentiment analyst. Analyze the given news content and rate the overall sentiment on a scale of 1-5 where: 1=Very Negative, 2=Negative, 3=Neutral, 4=Positive, 5=Very Positive. Return ONLY the number (1, 2, 3, 4, or 5).",
             input=f"Rate the sentiment of this news content:\n\n{news_text}"
         )
         
         # Extract score
-        score_text = response.choices[0].message.content.strip()
+        score_text = response.output_text
         score = int(''.join(filter(str.isdigit, score_text)))
         
         # Ensure score is between 1-5

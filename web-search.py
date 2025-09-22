@@ -117,7 +117,7 @@ with col1:
             time.sleep(1)  # Small delay for UX
             
             # Generate search query using x1 and x2 from user selections
-            search_query = f"Berita {x1} {x2} di Indonesia, hanya listnya saja jangan pakai kata kata lain!"
+            search_query = f"Berita {x1} {x2} di Indonesia, hanya listnya dan linknya saja,jangan pakai kata kata lain!"
             
             # Get news results using OpenAI web search
             news_text = search_news_with_ai(search_query)

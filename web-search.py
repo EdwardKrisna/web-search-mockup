@@ -32,7 +32,7 @@ def search_news_with_ai(query):
         )
         
         # Get the raw response text - keep it simple
-        news_text = response.output[1].content[0].text
+        news_text = response.output_text
         return news_text
         
     except Exception as e:

@@ -142,7 +142,8 @@ class AgenticView:
                         t.alamat_lokasi,
                         t.keterangan,
                         t.kepemilikan,             
-                        t.dokumen_kepemilikan,      
+                        t.dokumen_kepemilikan,
+                        t.tujuan_penugasan_text,
                         t.geometry,
                         ST_Distance(t.geog, q.pt) AS distance_m
                     FROM objek_penilaian t, q
@@ -155,7 +156,8 @@ class AgenticView:
         return df
     
     async def _similarity_row(self, user_pemberi_tugas, user_tahun, 
-                              user_kepemilikan, user_dokumen_kepemilikan, row):
+                              user_kepemilikan, user_dokumen_kepemilikan, 
+                              user_tujuan_penilaian, user_jenis_objek, row):
         CERT_SUMMARY = """
         Dokumen kepemilikan levels (strongest → weakest):
         1  Sertifikat Hak Milik (SHM) = full ownership
@@ -169,13 +171,17 @@ class AgenticView:
             "where x is an integer 0-100 expressing how likely these two records refer to the SAME object."
         )
         
-        user_line = (
-            f"Pemberi tugas: {user_pemberi_tugas}, tahun: {user_tahun}, "
-            f"kepemilikan: {user_kepemilikan}, dokumen: {user_dokumen_kepemilikan}"
+        user_line = (f"""
+            Pemberi tugas: {user_pemberi_tugas}, tahun: {user_tahun}, 
+            jenis objek: {user_jenis_objek}, kepemilikan: {user_kepemilikan}, dokumen: {user_dokumen_kepemilikan}, 
+            tujuan: {user_tujuan_penilaian}
+            """
         )
-        db_line = (
-            f"Pemberi tugas: {row['pemberi_tugas']}, tahun: {row['tahun_kontrak']}, "
-            f"kepemilikan: {row['kepemilikan']}, dokumen: {row['dokumen_kepemilikan']}"
+        db_line = (f"""
+            Pemberi tugas: {row['pemberi_tugas']}, tahun: {row['tahun_kontrak']}, 
+            jenis objek: {row['jenis_objek_text']}, kepemilikan: {row['kepemilikan']}, dokumen: {row['dokumen_kepemilikan']}, 
+            tujuan: {row['tujuan_penugasan_text']}
+            """
         )
         
         resp = await self.gpt_client_async.responses.create(
@@ -194,10 +200,13 @@ class AgenticView:
         user_tahun = parameter.get("tahun", 0)
         user_kepemilikan = parameter.get("kepemilikan", "")
         user_dokumen_kepemilikan = parameter.get("dokumen_kepemilikan", "")
+        user_tujuan_penilaian = parameter.get("tujuan_penilaian", "")
+        user_jenis_objek = parameter.get("jenis_objek", "")
         
         tasks = [
             self._similarity_row(user_pemberi_tugas, user_tahun, 
-                               user_kepemilikan, user_dokumen_kepemilikan, row)
+                               user_kepemilikan, user_dokumen_kepemilikan,
+                               user_tujuan_penilaian, user_jenis_objek, row)
             for _, row in neighbour_df.iterrows()
         ]
         pct_list = await asyncio.gather(*tasks)
@@ -261,6 +270,18 @@ class AgenticView:
         )
         
         neighbour = await self._add_similarity_column(neighbour, parameter)
+        
+        # Sort by similarity_pct descending (highest similarity first)
+        # Extract numeric value from 'x%' format
+        def extract_pct(pct_str):
+            try:
+                return float(str(pct_str).replace('%', '').strip())
+            except:
+                return 0
+        
+        neighbour['similarity_numeric'] = neighbour['similarity_pct'].apply(extract_pct)
+        neighbour = neighbour.sort_values('similarity_numeric', ascending=False)
+        neighbour = neighbour.drop('similarity_numeric', axis=1)
         
         summary, client_sentiment = await asyncio.gather(
             self.get_llm_response_of_object(neighbour, gdf_from_params),

@@ -359,6 +359,12 @@ if st.button("🔍 Analyze", type="primary"):
         # Run async function
         try:
             neighbour_df, json_result = asyncio.run(agentic_view.get_result(params))
+
+            # Add this line BEFORE storing in session state
+            if 'geometry' in neighbour_df.columns:
+                neighbour_df = neighbour_df.drop('geometry', axis=1)
+
+            st.session_state.neighbour_df = neighbour_df
             
             if neighbour_df is not None:
                 st.session_state.neighbour_df = neighbour_df

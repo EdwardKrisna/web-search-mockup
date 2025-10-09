@@ -2,3 +2,4 @@ streamlit
 openai
 googlemaps
 sqlalchemy
+geopandas

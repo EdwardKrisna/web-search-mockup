@@ -31,27 +31,27 @@ if 'json_result' not in st.session_state:
 st.title("🏠 Land Valuation Conflict Detection System")
 st.markdown("---")
 
-# Sidebar for API credentials info
-with st.sidebar:
-    st.header("ℹ️ About")
-    st.info("""
-    This application helps assessment firms:
-    - Prevent conflicts of interest
-    - Avoid duplication of work
-    - Avoid re-evaluating the same object
+# # Sidebar for API credentials info
+# with st.sidebar:
+#     st.header("ℹ️ About")
+#     st.info("""
+#     This application helps assessment firms:
+#     - Prevent conflicts of interest
+#     - Avoid duplication of work
+#     - Avoid re-evaluating the same object
     
-    **Setup Required:**
-    Add these to `.streamlit/secrets.toml`:
-    ```toml
-    OPENAI_API_KEY = "your-key"
-    GOOGLE_API_KEY = "your-key"
-    DB_USER = "your-user"
-    DB_PASSWORD = "your-password"
-    DB_HOST = "your-host"
-    DB_PORT = "5432"
-    DB_NAME = "your-db"
-    ```
-    """)
+#     **Setup Required:**
+#     Add these to `.streamlit/secrets.toml`:
+#     ```toml
+#     OPENAI_API_KEY = "your-key"
+#     GOOGLE_API_KEY = "your-key"
+#     DB_USER = "your-user"
+#     DB_PASSWORD = "your-password"
+#     DB_HOST = "your-host"
+#     DB_PORT = "5432"
+#     DB_NAME = "your-db"
+#     ```
+#     """)
 
 # Initialize clients and engine
 @st.cache_resource
@@ -214,21 +214,21 @@ class AgenticView:
         return neighbour_df
     
     async def get_llm_response_of_object(self, df, gdf_from_params):
-        fetched_context = df.to_json(orient="records") if df is not None else None
+        fetched_context = df.drop('geometry', axis=1).to_json(orient="records") if df is not None else None
         prospected_jobs = gdf_from_params.to_dict(orient="records")
         
         response = await self.gpt_client_async.responses.create(
             model="gpt-4.1-mini",
             input=f"""
-            You are a Bahasa Indonesia speaking assistant tasked with assisting an assessment firm to:
+            You are a speaking assistant tasked with assisting an assessment firm to:
             1. Prevent conflicts of interest
             2. Avoid duplication of work
             3. Avoid re-evaluating the same object
 
-            The following is data on new assignment prospects (prospected_jobs):
+            The following is data on new assignment prospects :
             {prospected_jobs}
 
-            And the following is data on assignments previously performed by the firm (fetched_context):
+            And the following is data on assignments previously performed by the firm :
             {fetched_context}
 
             The similarity_pct column shows the level of similarity (0-100%) between a user object and an object in the database.
@@ -236,6 +236,8 @@ class AgenticView:
             - Compare each object in prospected_jobs with the list in fetched_context.
             - Identify any objects that are potentially identical, similar, or potentially conflicting.
             - Explain the reasons for the similarity (e.g., similar addresses, close coordinates, same assignor name, high similarity_pct value, etc.).
+
+            NOTE : Use Bahasa Indonesia!
             """
         )
         return response.output_text
@@ -281,6 +283,10 @@ class AgenticView:
         
         neighbour['similarity_numeric'] = neighbour['similarity_pct'].apply(extract_pct)
         neighbour = neighbour.sort_values('similarity_numeric', ascending=False)
+
+        # Filter: only keep rows with similarity >= 30%
+        neighbour = neighbour[neighbour['similarity_numeric'] >= 30]
+
         neighbour = neighbour.drop('similarity_numeric', axis=1)
         
         summary, client_sentiment = await asyncio.gather(

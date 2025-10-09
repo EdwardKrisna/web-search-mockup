@@ -28,8 +28,8 @@ if 'json_result' not in st.session_state:
     st.session_state.json_result = None
 
 # Title
-st.title("🏠 Land Valuation Conflict Detection System")
-st.markdown("---")
+st.title("🏠 Object View Mock Up")
+# st.markdown("---")
 
 # # Sidebar for API credentials info
 # with st.sidebar:
@@ -81,9 +81,9 @@ def init_clients():
 # Load clients
 try:
     gpt_client_async, gmaps, engine = init_clients()
-    st.sidebar.success("✅ APIs Connected")
+    # st.sidebar.success("✅ APIs Connected")
 except:
-    st.sidebar.error("❌ Check your secrets.toml")
+    # st.sidebar.error("❌ Check your secrets.toml")
     st.stop()
 
 # Copy your AgenticView class here or import it
@@ -214,7 +214,7 @@ class AgenticView:
         return neighbour_df
     
     async def get_llm_response_of_object(self, df, gdf_from_params):
-        fetched_context = df.drop('geometry', axis=1).to_json(orient="records") if df is not None else None
+        fetched_context = df.to_json(orient="records") if df is not None else None
         prospected_jobs = gdf_from_params.to_dict(orient="records")
         
         response = await self.gpt_client_async.responses.create(
@@ -288,7 +288,8 @@ class AgenticView:
         neighbour = neighbour[neighbour['similarity_numeric'] >= 30]
 
         neighbour = neighbour.drop('similarity_numeric', axis=1)
-        
+        neighbour = neighbour.drop('geometry', axis=1)  # ADD THIS LINE
+
         summary, client_sentiment = await asyncio.gather(
             self.get_llm_response_of_object(neighbour, gdf_from_params),
             self.get_llm_response_of_task_giver(parameter["pemberi_tugas"]),

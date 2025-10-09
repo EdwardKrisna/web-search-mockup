@@ -3,4 +3,8 @@ openai
 googlemaps
 sqlalchemy
 geopandas
-psycopg2
+psycopg2-binary
+shapely
+pandas
+python-dotenv
+asyncio

@@ -3,3 +3,4 @@ openai
 googlemaps
 sqlalchemy
 geopandas
+psycopg2

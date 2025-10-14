@@ -260,6 +260,8 @@ st.markdown("""
 
 st.markdown(
     """
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+
     <div style="
         display: flex;
         align-items: center;
@@ -271,7 +273,15 @@ st.markdown(
                  alt="Logo" width="120">
         </div>
         <div style="flex: 1; text-align: center;">
-            <h2 style="margin: 0; font-size: 36px; font-weight: 700;">Agentic View</h2>
+            <h2 style="
+                margin: 0;
+                font-size: 36px;
+                font-family: 'Playfair Display', serif;
+                font-weight: 600;
+                color: #222;
+            ">
+                Agentic View
+            </h2>
         </div>
         <div style="flex: 1;"></div>
     </div>

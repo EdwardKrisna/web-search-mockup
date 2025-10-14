@@ -253,7 +253,7 @@ if "history"        not in st.session_state:
 # ----------------------------------------------------------
 st.markdown("""
 <style>
-.main-header{font-size:2.5rem;font-weight:bold;color:#1f77b4;text-align:center;margin-bottom:2rem}
+.main-header{font-size:2.5rem;font-weight:bold;color:#000000;text-align:center;margin-bottom:2rem}
 .info-box{background-color:#f0f2f6;padding:1rem;border-radius:.5rem;margin:1rem 0}
 </style>
 """, unsafe_allow_html=True)
@@ -283,12 +283,15 @@ with tab1:
         luas_tanah    = st.number_input("Luas Tanah (m²)", min_value=0, value=180, step=10)
         luas_bangunan = st.number_input("Luas Bangunan (m²)", min_value=0, value=140, step=10)
 
-    st.divider()
-    bc1, bc2, _ = st.columns([1,1,2])
-    with bc1:
-        submit = st.button("🔍 Analisis Sekarang", type="primary", use_container_width=True)
-    with bc2:
-        if st.button("🗑️ Bersihkan Form", use_container_width=True): st.rerun()
+    # centred button row
+    cols = st.columns([1, 2, 1])          # outside columns are spacers
+    with cols[1]:                         # middle column
+        c1, c2 = st.columns(2)
+        with c1:
+            submit = st.button("🔍 Analisis Sekarang", type="primary", use_container_width=True)
+        with c2:
+            if st.button("🗑️ Bersihkan Form", use_container_width=True):
+                st.rerun()
 
     if submit:
         if not (pemberi_tugas and alamat_lokasi):
@@ -343,13 +346,13 @@ with tab2:
         st.markdown("---")
         st.subheader("📋 Ringkasan Analisis")
         #  use native st.info -> respects dark / light theme
-        st.info(js["summary"])
+        st.markdown(js["summary"])
 
         #  only show news section if we actually searched for news
         if agentic_view.DO_NEWS:
             st.markdown("---")
             st.subheader("📰 Cek Pemberi Tugas")
-            st.info(js["client_sentiment"])
+            st.markdown(js["client_sentiment"])
 
         st.markdown("---")
         dc1, dc2 = st.columns(2)

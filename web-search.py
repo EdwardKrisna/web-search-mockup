@@ -268,7 +268,7 @@ st.markdown(
     ">
         <div style="flex: 1; text-align: left;">
             <img src="https://kjpp.rhr.co.id/wp-content/uploads/2020/12/LOGO_KJPP_RHR_1_resize.png" 
-                 alt="Logo" width="80">
+                 alt="Logo" width="120">
         </div>
         <div style="flex: 1; text-align: center;">
             <h2 style="margin: 0;">Agentic View</h2>

@@ -183,8 +183,11 @@ class AgenticView:
             - Compare each object in prospected_jobs with the list in fetched_context.
             - Identify any objects that are potentially identical, similar, or potentially conflicting.
             - Explain the reasons for the similarity (e.g., similar addresses, close coordinates, same assignor name, high similarity_pct value, etc.).
-
-            NOTE : Use Bahasa Indonesia!
+            - If any, display the potentially similar data in table form (name of the assignor, address, distance, purpose of assessment, type of transaction, contract year)
+            
+            NOTE : 
+            - Use Bahasa Indonesia!
+            - User doesn't need to know the 'similarity_pct' because it is only for your evaluation!
             """
         
         resp = await self.gpt_client_async.responses.create(model="gpt-4.1-mini", input=prompt)

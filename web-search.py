@@ -187,7 +187,7 @@ class AgenticView:
             NOTE : 
             - Use Bahasa Indonesia!
             - User doesn't need to know the 'similarity_pct' because it is only for your evaluation! So no need to mention it!
-            - If any, display the potentially similar data in table form (name of the assignor, address, distance, purpose of assessment, type of transaction, contract year)
+            - If any, display the potentially similar data in table form in markdown format (name of the assignor, address, distance, purpose of assessment, type of transaction, contract year)
             """
         
         resp = await self.gpt_client_async.responses.create(model="gpt-4.1-mini", input=prompt)
@@ -455,7 +455,7 @@ with tab1:
                 placeholder.markdown(
                     """
                     <div style="text-align:center; margin-top:50px;">
-                        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcmU1cDF4cHYyb3ZxNnZpYzdmZDN1bW94bGlnaWtpZzdvdms5ZWhlcHZkN2c1ZTZicmhtczRuOG1pYiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/EWuJ3GXmbJgHALJJH2/giphy.gif" 
+                        <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWZ4bWczbGY1a3l6bDRkZzl6Yjd0eTJ5bTQ0MDJ1cHE1Zjgxemo1MyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/6nuiJjOOQBBn2/giphy.gif" 
                             width="150" alt="Success!">
                         <p style="font-size:18px; color:#16a34a; font-weight:600;">Analisis selesai! Lihat tab <b>Hasil Analisis</b>.</p>
                     </div>

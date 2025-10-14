@@ -258,7 +258,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-header">🏢 Agentic View 1.0 – BETA</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header">🏢 Agentic View</div>', unsafe_allow_html=True)
 
 # ----------------------------------------------------------
 # 6.  TABS
@@ -333,6 +333,7 @@ with tab2:
         df = st.session_state.neighbour_df
         js  = st.session_state.json_result
 
+        # ---- expandable neighbour table ----
         with st.expander("🗂️ Lihat Tabel Objek Serupa", expanded=True):
             if df is not None and not df.empty:
                 st.dataframe(df, use_container_width=True, height=400)
@@ -341,11 +342,14 @@ with tab2:
 
         st.markdown("---")
         st.subheader("📋 Ringkasan Analisis")
-        st.markdown(f'<div class="info-box">{js["summary"]}</div>', unsafe_allow_html=True)
+        #  use native st.info -> respects dark / light theme
+        st.info(js["summary"])
 
-        st.markdown("---")
-        st.subheader("📰 Cek Pemberi Tugas")
-        st.markdown(f'<div class="info-box">{js["client_sentiment"]}</div>', unsafe_allow_html=True)
+        #  only show news section if we actually searched for news
+        if agentic_view.DO_NEWS:
+            st.markdown("---")
+            st.subheader("📰 Cek Pemberi Tugas")
+            st.info(js["client_sentiment"])
 
         st.markdown("---")
         dc1, dc2 = st.columns(2)
@@ -383,8 +387,3 @@ with tab3:
 # 7.  FOOTER
 # ----------------------------------------------------------
 st.divider()
-st.markdown(
-    "<div style='text-align:center;color:#666;font-size:0.85rem;'>"
-    "Agentic View (BETA) v1.0 | Pastikan API keys sudah dikonfigurasi dengan benar</div>",
-    unsafe_allow_html=True
-)

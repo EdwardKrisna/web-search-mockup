@@ -261,16 +261,19 @@ st.markdown("""
 st.markdown(
     """
     <div style="
-        display:flex; 
-        justify-content:center; 
-        align-items:center; 
-        gap:16px;
-        margin-top:30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
     ">
-        <img src="https://kjpp.rhr.co.id/wp-content/uploads/2020/12/LOGO_KJPP_RHR_1_resize.png" 
-             alt="Logo" 
-             style="width:100px; max-width:20vw;">
-        <h1 style="margin:0; font-size:2rem; color:#222;">Agentic View</h1>
+        <div style="flex: 1; text-align: left;">
+            <img src="https://kjpp.rhr.co.id/wp-content/uploads/2020/12/LOGO_KJPP_RHR_1_resize.png" 
+                 alt="Logo" width="80">
+        </div>
+        <div style="flex: 1; text-align: center;">
+            <h2 style="margin: 0;">Agentic View</h2>
+        </div>
+        <div style="flex: 1;"></div> <!-- empty right space for balance -->
     </div>
     """,
     unsafe_allow_html=True

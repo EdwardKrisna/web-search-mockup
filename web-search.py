@@ -11,6 +11,22 @@ from sqlalchemy import create_engine
 import json
 from datetime import datetime
 
+st.markdown(
+    """
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        html, body, [class*="css"] {
+            font-family: 'Open Sans', sans-serif !important;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif !important;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
 # ----------------------------------------------------------
 # 1.  SECRETS  →  CLIENTS  →  ENGINE
 # ----------------------------------------------------------

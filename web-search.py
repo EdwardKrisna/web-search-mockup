@@ -270,13 +270,78 @@ with tab1:
     st.header("Input Data Penugasan Baru")
     c1, c2 = st.columns(2)
     with c1:
-        jenis_objek      = st.selectbox("Jenis Objek *", ["Rumah Tinggal","Ruko","Kantor","Pabrik","Tanah Kosong","Lainnya"])
-        pemberi_tugas    = st.text_input("Pemberi Tugas *", placeholder="PT Bank ABC")
+        jenis_objek      = st.selectbox("Jenis Objek *", [
+                "Kios",
+                "Bisnis Unit",
+                "Kapal",
+                "Rumah Sakit",
+                "Unit Mesin",
+                "Rumah Tinggal",
+                "Pembangkit Listrik",
+                "Perkebunan Kelapa Sawit",
+                "Ruko",
+                "Perkebunan Hutan Tanaman Industri",
+                "Alat Berat",
+                "Stok Barang",
+                "Pabrik",
+                "Lainnya",
+                "Tanah dan Bangunan Sederhana",
+                "Pabrik Kelapa Sawit",
+                "Tanah Kosong",
+                "Pembangkit",
+                "Tangki Timbun (Bulking Station)",
+                "Gedung Kantor",
+                "Serviced Apartemen",
+                "Aset Tak Berwujud",
+                "Tower",
+                "SPBU",
+                "Tanah dan Bangunan Gudang atau Pabrik",
+                "Perkebunan Nanas & Komoditi Lain",
+                "Mesin dan Peralatan",
+                "Biogas",
+                "Saham",
+                "Villa",
+                "Perkebunan Hortikultur",
+                "Pendapat Kewajaran",
+                "Hotel",
+                "Soho",
+                "Entitas",
+                "Unit Kendaraan",
+                "Transaksi",
+                "Pipeline",
+                "Ruang Kantor",
+                "Kondominium",
+                "Mall",
+                "Perkebunan Kelapa Sawit Plasma",
+                "Bangunan Saja"
+            ])
+        pemberi_tugas    = st.text_input("Pemberi Tugas *", placeholder="Nama institusi/perusahaan yang memberikan tugas")
         tahun            = st.number_input("Tahun Kontrak *", min_value=2000, max_value=2100, value=datetime.now().year)
-        tujuan_penilaian = st.text_input("Tujuan Penilaian *", value="Kredit Pemilikan Rumah")
-        jenis_transaksi  = st.text_input("Jenis Transaksi", value="Jual-Beli")
+        tujuan_penilaian = st.selectbox("Tujuan Penilaian *", [
+                "Pelaporan Keuangan",
+                "Audit Support / Review",
+                "Asuransi",
+                "Investasi / Pendanaan",
+                "Akuisisi / Penggabungan Usaha / Divestasi",
+                "Jual Beli / Sewa Menyewa",
+                "Penghapusan Aset / Hibah / Lelang",
+                "IPO / Keterbukaan Informasi Publik",
+                "Penjaminan Utang",
+                "Pengadaan Tanah / Kompensasi",
+                "Kajian Nilai / Studi Kelayakan",
+                "Rencana Kerjasama / Internal Manajemen",
+                "Pemanfaatan Ruang / Kesesuaian Tata Ruang"
+            ])
+        jenis_transaksi  = st.selectbox("Jenis Transaksi *", [
+                "Monitoring" , 
+                "Advisory" , 
+                "Konsultansi" , 
+                "Penilaian Saham" , 
+                "Penilaian Aset" , 
+                "Others"
+            ])
     with c2:
-        alamat_lokasi = st.text_area("Alamat Lokasi *", placeholder="Jl. Gandaria VI No 12, Jakarta Selatan", height=100)
+        alamat_lokasi = st.text_area("Alamat Lokasi *", placeholder="Masukkan alamat lengkap objek penilaian", height=100)
         lon_col, lat_col = st.columns(2)
         with lon_col: longitude = st.text_input("Longitude", placeholder="opsional")
         with lat_col:  latitude  = st.text_input("Latitude",  placeholder="opsional")

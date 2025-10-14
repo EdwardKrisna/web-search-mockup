@@ -423,22 +423,39 @@ with tab1:
                 "kepemilikan"      : "tunggal",
                 "dokumen_kepemilikan":"Sertifikat Hak Milik"
             }
-            with st.spinner("🔄 Sedang menganalisis…"):
-                try:
-                    n_df, js = asyncio.run(agentic_view.get_result(param))
-                    st.session_state.neighbour_df = n_df
-                    st.session_state.json_result  = js
-                    st.session_state.result_ready = True
-                    # ---- HISTORY ----
-                    st.session_state.history.append({
-                        "timestamp": datetime.now(),
-                        "pemberi_tugas": pemberi_tugas,
-                        "alamat": alamat_lokasi,
-                        "results": js
-                    })
-                    st.success("✅ Analisis selesai! Lihat tab Hasil Analisis.")
-                except Exception as e:
-                    st.error(f"❌ Kesalahan: {e}")
+            # --- custom loading animation placeholder ---
+            placeholder = st.empty()
+
+            # show animated loader
+            placeholder.markdown(
+                """
+                <div style="text-align:center; margin-top:50px;">
+                    <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExd3c5MDZkZDU2cGNpeXNvYXljdnZkemVuMnBwNHI1aXB3cXBrangzdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/wrmVCNbpOyqgJ9zQTn/giphy.gif" 
+                        width="120" alt="Loading...">
+                    <p style="font-size:18px;">Sedang menganalisis…</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+            try:
+                n_df, js = asyncio.run(agentic_view.get_result(param))
+                st.session_state.neighbour_df = n_df
+                st.session_state.json_result  = js
+                st.session_state.result_ready = True
+                # ---- HISTORY ----
+                st.session_state.history.append({
+                    "timestamp": datetime.now(),
+                    "pemberi_tugas": pemberi_tugas,
+                    "alamat": alamat_lokasi,
+                    "results": js
+                })
+                # clear the loader
+                placeholder.empty()
+                st.success("✅ Analisis selesai! Lihat tab Hasil Analisis.")
+            except Exception as e:
+                placeholder.empty()
+                st.error(f"❌ Kesalahan: {e}")
 
 # ========================================================== TAB 2
 with tab2:

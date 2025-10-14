@@ -276,8 +276,6 @@ st.markdown("""
 
 st.markdown(
     """
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-
     <div style="
         display: flex;
         align-items: center;
@@ -286,13 +284,12 @@ st.markdown(
     ">
         <div style="flex: 1; text-align: left;">
             <img src="https://kjpp.rhr.co.id/wp-content/uploads/2020/12/LOGO_KJPP_RHR_1_resize.png" 
-                 alt="Logo" width="120">
+                 alt="Logo" width="150">
         </div>
         <div style="flex: 1; text-align: center;">
             <h2 style="
                 margin: 0;
                 font-size: 36px;
-                font-family: 'Playfair Display', serif;
                 font-weight: 600;
                 color: #222;
             ">

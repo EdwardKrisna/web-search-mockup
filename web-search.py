@@ -258,7 +258,16 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="main-header">🏢 Agentic View</div>', unsafe_allow_html=True)
+st.markdown(
+    """
+    <div class="main-header" style="display:flex; align-items:center; gap:10px;">
+        <img src="https://kjpp.rhr.co.id/wp-content/uploads/2020/12/LOGO_KJPP_RHR_1_resize.png" 
+             alt="Logo" width="60">
+        <h2 style="margin:0;">Agentic View</h2>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # ----------------------------------------------------------
 # 6.  TABS

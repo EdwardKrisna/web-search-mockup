@@ -450,9 +450,19 @@ with tab1:
                     "alamat": alamat_lokasi,
                     "results": js
                 })
+
                 # clear the loader
-                placeholder.empty()
-                st.success("✅ Analisis selesai! Lihat tab Hasil Analisis.")
+                placeholder.markdown(
+                    """
+                    <div style="text-align:center; margin-top:50px;">
+                        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcmU1cDF4cHYyb3ZxNnZpYzdmZDN1bW94bGlnaWtpZzdvdms5ZWhlcHZkN2c1ZTZicmhtczRuOG1pYiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/EWuJ3GXmbJgHALJJH2/giphy.gif" 
+                            width="150" alt="Success!">
+                        <p style="font-size:18px; color:#16a34a; font-weight:600;">Analisis selesai! Lihat tab <b>Hasil Analisis</b>.</p>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
             except Exception as e:
                 placeholder.empty()
                 st.error(f"❌ Kesalahan: {e}")

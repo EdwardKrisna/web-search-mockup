@@ -271,9 +271,9 @@ st.markdown(
                  alt="Logo" width="120">
         </div>
         <div style="flex: 1; text-align: center;">
-            <h2 style="margin: 0;">Agentic View</h2>
+            <h2 style="margin: 0; font-size: 36px; font-weight: 700;">Agentic View</h2>
         </div>
-        <div style="flex: 1;"></div> <!-- empty right space for balance -->
+        <div style="flex: 1;"></div>
     </div>
     """,
     unsafe_allow_html=True

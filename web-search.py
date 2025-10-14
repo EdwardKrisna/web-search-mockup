@@ -260,14 +260,22 @@ st.markdown("""
 
 st.markdown(
     """
-    <div class="main-header" style="display:flex; align-items:center; gap:10px;">
+    <div style="
+        display:flex; 
+        justify-content:center; 
+        align-items:center; 
+        gap:16px;
+        margin-top:30px;
+    ">
         <img src="https://kjpp.rhr.co.id/wp-content/uploads/2020/12/LOGO_KJPP_RHR_1_resize.png" 
-             alt="Logo" width="60">
-        <h2 style="margin:0;">Agentic View</h2>
+             alt="Logo" 
+             style="width:100px; max-width:20vw;">
+        <h1 style="margin:0; font-size:2rem; color:#222;">Agentic View</h1>
     </div>
     """,
     unsafe_allow_html=True
 )
+
 
 # ----------------------------------------------------------
 # 6.  TABS

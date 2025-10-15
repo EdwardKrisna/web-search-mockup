@@ -187,7 +187,7 @@ class AgenticView:
             - You may use the similarity_pct to guide your decision, **but do NOT show it in the output**.
             
             **RESPONSE PATTERNS:** (FOLLOW THIS EXACTLY! Do not skip any section!)
-            # Data Objek Prospek (TITLE, bold)
+            # Data Objek Prospek
             \n
             (Tampilkan detail objek prospek)
             - Jenis Objek       :
@@ -200,7 +200,7 @@ class AgenticView:
             - Jenis Transaksi   :
             - Alamat Lokasi     :
 
-            # Data Objek Sebelumnya (TITLE, bold)
+            # Data Objek Sebelumnya
             \n
             (If there are any similar or potentially related previous assignments, display them in this markdown table:)
             | Nama Pemberi Tugas | Alamat | Jarak | Tujuan Penilaian | Jenis Transaksi | Tahun Kontrak |
@@ -209,11 +209,11 @@ class AgenticView:
             If there are no relevant matches, write:
             "Tidak ada data yang relevan."
 
-            # Analisis dan Kesimpulan (TITLE, bold)
+            # Analisis dan Kesimpulan
             \n
             (Write a concise explanation in Bahasa Indonesia: what similarities exist, if any, and why it matters)
 
-            # Rekomendasi (TITLE, bold)
+            # Rekomendasi
             \n
             (Give a clear recommendation: proceed, check further, avoid, etc.)
 

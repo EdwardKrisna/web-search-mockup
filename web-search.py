@@ -175,40 +175,42 @@ class AgenticView:
             The following is data on new assignment prospects :
             {prospect}
 
-            And the following is data on assignments previously performed by the firm :
+            And below is data on **previous assignments** performed by the firm :
             {fetched}
 
-            The 'similarity_pct' column shows the level of similarity (0-100%) between a user object and an object in the database.
+            The 'similarity_pct' column indicates the similarity level (0-100%) between a new object and one in the database.
             Your task:
-            - Compare each object in prospected_jobs with the list in fetched_context.
-            - Identify any objects that are potentially identical, similar, or potentially conflicting.
-            - Explain the reasons for the similarity (e.g., similar addresses, close coordinates, same assignor name, high similarity_pct value, etc.).
+            - Compare each object in the new prospects list with the previous assignments list.
+            - Identify any objects that are potentially **identical**, **similar**, or **conflicting**.
+            - Explain the reasons for the match or conflict. For example: similar address, nearby coordinates, same assignor name, similar purpose, etc.
+            - You may use the similarity_pct to guide your decision, **but do NOT show it in the output**.
             
-            OUTPUT FORMAT : 
+            OUTPUT FORMAT:
             ============================
-            Data Objek Prospek
+            Prospective Object Data
             ============================
-            ....
+            (Show relevant details of the new object)
 
             ============================
-            Data Objek Sebelumnya
+            Previous Assignment Data
             ============================
-            ..(IN TABLE)..
+            (Display matching or relevant entries in a markdown table)
+
+            **Columns**: Nama Pemberi Tugas | Alamat | Jarak | Tujuan Penilaian | Jenis Transaksi | Tahun Kontrak
 
             ============================
-            Analisis dan Kesimpulan
+            Analysis and Conclusion
             ============================
-            ...
-            
+            (Explain why this is a match, a potential conflict, or not relevant)
+
             ============================
-            Rekomendasi
+            Recommendation
             ============================
-            ...
+            (Give a recommendation: proceed, recheck, avoid, etc.)
 
             NOTE : 
-            - Use Bahasa Indonesia!
-            - User doesn't need to know the 'similarity_pct' because it is only for your evaluation! So no need to mention it in the explanation/summary!
-            - If any, display the potentially similar data in a table (markdown format) , the column : name of the assignor, address, distance, purpose of assessment, type of transaction, contract year.
+            - Use **Bahasa Indonesia** in the output!
+            - Do not mention or show the similarity_pct in any part of the output.
             """
         
         resp = await self.gpt_client_async.responses.create(model="gpt-4.1-mini", input=prompt)

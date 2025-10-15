@@ -138,7 +138,7 @@ class AgenticView:
         user = f"Pemberi tugas: {user_pemberi_tugas}, tahun: {user_tahun}, jenis objek: {user_jenis_objek}, kepemilikan: {user_kepemilikan}, dokumen: {user_dokumen_kepemilikan}, tujuan: {user_tujuan_penilaian}"
         db   = f"Pemberi tugas: {row['pemberi_tugas']}, tahun: {row['tahun_kontrak']}, jenis objek: {row['jenis_objek_text']}, kepemilikan: {row['kepemilikan']}, dokumen: {row['dokumen_kepemilikan']}, tujuan: {row['tujuan_penugasan_text']}"
         resp = await self.gpt_client_async.responses.create(
-            model="gpt-4.1-mini",
+            model="gpt-5-mini",
             instructions=instruksi,
             input=f"User: {user}\nDatabase: {db}"
         )
@@ -213,7 +213,7 @@ class AgenticView:
             - Do not mention or show the similarity_pct in any part of the output.
             """
         
-        resp = await self.gpt_client_async.responses.create(model="gpt-4.1-mini", input=prompt)
+        resp = await self.gpt_client_async.responses.create(model="gpt-5-mini", input=prompt)
         return resp.output_text
 
     # ---- OPTIONAL news search (set DO_NEWS = False to disable) ----

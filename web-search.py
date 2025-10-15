@@ -186,8 +186,8 @@ class AgenticView:
             
             NOTE : 
             - Use Bahasa Indonesia!
-            - User doesn't need to know the 'similarity_pct' because it is only for your evaluation! So no need to mention it!
-            - If any, display the potentially similar data in table form in markdown format (name of the assignor, address, distance, purpose of assessment, type of transaction, contract year)
+            - User doesn't need to know the 'similarity_pct' because it is only for your evaluation! So no need to mention it in the explanation/summary!
+            - If any, display the potentially similar data in a table (markdown format) , the column : name of the assignor, address, distance, purpose of assessment, type of transaction, contract year.
             """
         
         resp = await self.gpt_client_async.responses.create(model="gpt-4.1-mini", input=prompt)

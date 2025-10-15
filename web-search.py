@@ -187,12 +187,12 @@ class AgenticView:
             
             **RESPONSE PATTERNS:** (FOLLOW THIS EXACTLY! Do not skip any section!)
             ============================
-            Data Objek Prospek
+            1. Data Objek Prospek (TITLE, bold)
             ============================
             (Tampilkan detail objek prospek)
 
             ============================
-            Data Objek Sebelumnya
+            Data Objek Sebelumnya (TITLE, bold)
             ============================
             If there are any similar or potentially related previous assignments, display them in this markdown table:
 
@@ -203,18 +203,19 @@ class AgenticView:
             "Tidak ada data yang relevan."
 
             ============================
-            Analisis dan Kesimpulan
+            Analisis dan Kesimpulan (TITLE, bold)
             ============================
             (Write a concise explanation in Bahasa Indonesia: what similarities exist, if any, and why it matters)
 
             ============================
-            Rekomendasi
+            Rekomendasi (TITLE, bold)
             ============================
             (Give a clear recommendation: proceed, check further, avoid, etc.)
 
             **IMPORTANT:** : 
             - Use **Bahasa Indonesia** in the output!
             - Do not mention or show the similarity_pct in any part of the output.
+            - The output MUST using the template on 'RESPONSE PATTERNS'! DONT MAKE ANYTHING OTHER THAN THAT!
             """
         
         resp = await self.gpt_client_async.responses.create(model="gpt-5-mini", input=prompt)

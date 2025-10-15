@@ -217,7 +217,7 @@ class AgenticView:
             - Do not mention or show the similarity_pct in any part of the output.
             """
         
-        resp = await self.gpt_client_async.responses.create(model="gpt-5-mini", input=prompt)
+        resp = await self.gpt_client_async.responses.create(model="gpt-4.1", input=prompt)
         return resp.output_text
 
     # ---- OPTIONAL news search (set DO_NEWS = False to disable) ----

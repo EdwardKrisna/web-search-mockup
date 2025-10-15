@@ -189,7 +189,6 @@ class AgenticView:
             **RESPONSE PATTERNS:** (FOLLOW THIS EXACTLY! Do not skip any section!)
             # Data Objek Prospek
             \n
-            (Tampilkan detail objek prospek)
             - Jenis Objek       :
             - Pemberi Tugas     :
             - Nomor Kontrak     :

@@ -210,7 +210,7 @@ class AgenticView:
             - The output MUST using the template on 'RESPONSE PATTERNS'! DONT MAKE ANYTHING OTHER THAN THAT!
             """
         
-        resp = await self.gpt_client_async.responses.create(model="gpt-5-nano", input=prompt)
+        resp = await self.gpt_client_async.responses.create(model="gpt-5-mini", input=prompt)
         return resp.output_text
 
     # ---- OPTIONAL news search (set DO_NEWS = False to disable) ----

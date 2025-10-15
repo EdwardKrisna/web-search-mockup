@@ -178,12 +178,33 @@ class AgenticView:
             And the following is data on assignments previously performed by the firm :
             {fetched}
 
-            The similarity_pct column shows the level of similarity (0-100%) between a user object and an object in the database.
+            The 'similarity_pct' column shows the level of similarity (0-100%) between a user object and an object in the database.
             Your task:
             - Compare each object in prospected_jobs with the list in fetched_context.
             - Identify any objects that are potentially identical, similar, or potentially conflicting.
             - Explain the reasons for the similarity (e.g., similar addresses, close coordinates, same assignor name, high similarity_pct value, etc.).
             
+            OUTPUT FORMAT : 
+            ============================
+            Data Objek Prospek
+            ============================
+            ....
+
+            ============================
+            Data Objek Sebelumnya
+            ============================
+            ..(IN TABLE)..
+
+            ============================
+            Analisis dan Kesimpulan
+            ============================
+            ...
+            
+            ============================
+            Rekomendasi
+            ============================
+            ...
+
             NOTE : 
             - Use Bahasa Indonesia!
             - User doesn't need to know the 'similarity_pct' because it is only for your evaluation! So no need to mention it in the explanation/summary!

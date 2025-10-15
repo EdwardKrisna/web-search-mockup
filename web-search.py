@@ -167,11 +167,12 @@ class AgenticView:
         fetched = df.to_json(orient="records") if df is not None else None
         prospect = gdf_from_params.to_dict(orient="records")
         prompt = f"""
-            You are a speaking assistant tasked with assisting an assessment firm to:
+            You are an assistant tasked with assisting an assessment firm to:
             1. Prevent conflicts of interest
             2. Avoid duplication of work
             3. Avoid re-evaluating the same object
 
+            **INFORMATIONS:** 
             The following is data on new assignment prospects :
             {prospect}
 

@@ -185,7 +185,7 @@ class AgenticView:
             - Explain the reasons for the match or conflict. For example: similar address, nearby coordinates, same assignor name, similar purpose, etc.
             - You may use the similarity_pct to guide your decision, **but do NOT show it in the output**.
             
-            OUTPUT FORMAT (FOLLOW THIS EXACTLY! Do not skip any section!)
+            **RESPONSE PATTERNS:** (FOLLOW THIS EXACTLY! Do not skip any section!)
             ============================
             Data Objek Prospek
             ============================
@@ -212,12 +212,12 @@ class AgenticView:
             ============================
             (Give a clear recommendation: proceed, check further, avoid, etc.)
 
-            NOTE : 
+            **IMPORTANT:** : 
             - Use **Bahasa Indonesia** in the output!
             - Do not mention or show the similarity_pct in any part of the output.
             """
         
-        resp = await self.gpt_client_async.responses.create(model="gpt-4.1", input=prompt)
+        resp = await self.gpt_client_async.responses.create(model="gpt-5-mini", input=prompt)
         return resp.output_text
 
     # ---- OPTIONAL news search (set DO_NEWS = False to disable) ----

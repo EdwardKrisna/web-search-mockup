@@ -185,28 +185,32 @@ class AgenticView:
             - Explain the reasons for the match or conflict. For example: similar address, nearby coordinates, same assignor name, similar purpose, etc.
             - You may use the similarity_pct to guide your decision, **but do NOT show it in the output**.
             
-            OUTPUT FORMAT:
+            OUTPUT FORMAT (FOLLOW THIS EXACTLY! Do not skip any section!)
             ============================
-            Prospective Object Data
+            Data Objek Prospek
             ============================
-            (Show relevant details of the new object)
+            (Tampilkan detail objek prospek)
 
             ============================
-            Previous Assignment Data
+            Data Objek Sebelumnya
             ============================
-            (Display matching or relevant entries in a markdown table)
+            If there are any similar or potentially related previous assignments, display them in this markdown table:
 
-            **Columns**: Nama Pemberi Tugas | Alamat | Jarak | Tujuan Penilaian | Jenis Transaksi | Tahun Kontrak
+            | Nama Pemberi Tugas | Alamat | Jarak | Tujuan Penilaian | Jenis Transaksi | Tahun Kontrak |
+            |---------------------|--------|--------|-------------------|------------------|----------------|
+
+            If there are no relevant matches, write:
+            "Tidak ada data yang relevan."
 
             ============================
-            Analysis and Conclusion
+            Analisis dan Kesimpulan
             ============================
-            (Explain why this is a match, a potential conflict, or not relevant)
+            (Write a concise explanation in Bahasa Indonesia: what similarities exist, if any, and why it matters)
 
             ============================
-            Recommendation
+            Rekomendasi
             ============================
-            (Give a recommendation: proceed, recheck, avoid, etc.)
+            (Give a clear recommendation: proceed, check further, avoid, etc.)
 
             NOTE : 
             - Use **Bahasa Indonesia** in the output!
